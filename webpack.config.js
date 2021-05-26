@@ -1,26 +1,32 @@
 const path = require('path');
-const publicDir = path.join(__dirname, 'public');
-
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 module.exports = {
   entry: './src',
   output: {
     filename: 'app.js',
-    path: publicDir
+    path: path.resolve(__dirname, 'public'),
   },
   devServer: {
-    contentBase: publicDir,
-    port: 1000
+    contentBase: path.resolve(__dirname, 'public'),
+    hot: true,
+    port: 3000,
   },
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader'
-        }
-      }
-    ]
-  }
-}
+        include: path.resolve(__dirname, 'src'),
+        loader: 'babel-loader',
+      },
+    ],
+  },
+  plugins: [
+    new ESLintPlugin({
+      extensions: ['.js', '.jsx'],
+    }),
+  ],
+  resolve: {
+    extensions: ['.js', '.jsx'],
+  },
+};
